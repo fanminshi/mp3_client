@@ -23,7 +23,37 @@ demoControllers.controller('SecondController', ['$scope', 'CommonData' , functio
 }]);
 
 
-demoControllers.controller('LlamaListController', ['$scope', '$http', 'Llamas', '$window' , function($scope, $http,  Llamas, $window) {
+demoControllers.controller('LlamaListController', ['$scope', '$http', 'CommonData', 'Llamas', '$window' , function($scope, $http, CommonData,  Llamas, $window) {
+
+  Llamas.get().success(function(data){
+  
+    $scope.llamas = data;
+  });
+
+
+}]);
+
+demoControllers.controller('UserListController', ['$scope', '$http', 'CommonData','User', '$window' , function($scope, $http, CommonData, User, $window) {
+    $scope.conditions = ""
+     User.get($scope.conditions).success(function(data){
+      CommonData.setUsers(data.data)
+     $scope.users = CommonData.getUsers();
+  });
+
+     $scope.delete = User.delete($scope.conditions).success(function(data){
+         CommonData.setUsers(data.data)
+         $scope.users = CommonData.getUsers();
+     }));
+
+     $scope.users = CommonData.getUsers();
+  });
+
+
+
+
+}]);
+
+demoControllers.controller('TaskListController', ['$scope', '$http', 'Llamas', '$window' , function($scope, $http,  Llamas, $window) {
 
   Llamas.get().success(function(data){
     $scope.llamas = data;

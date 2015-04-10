@@ -1,0 +1,17 @@
+<div class="list" ng-controller='FirstController'>		
+	<div ng-repeat = "user in users">
+	  <div class="row text-center" >
+          <div class="small-4 columns">
+            <h4>{{user.name}}</h4>
+          </div>
+          <div class="small-4 columns">
+            <h4>{{user._id}}</h4>
+          </div>
+
+          <div class="small-4 columns">
+             <button ng-click="delete({{user._id}})" class="button alert">Delete</button>
+          </div>
+      </div>
+  </div>
+</div>
+
