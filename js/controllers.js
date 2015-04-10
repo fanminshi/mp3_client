@@ -23,7 +23,7 @@ demoControllers.controller('SecondController', ['$scope', 'CommonData' , functio
 }]);
 
 
-demoControllers.controller('LlamaListController', ['$scope', '$http', 'CommonData', 'Llamas', '$window' , function($scope, $http, CommonData,  Llamas, $window) {
+demoControllers.controller('LlamaListController', ['$scope', '$http', 'Llamas', '$window' , function($scope, $http,  Llamas, $window) {
 
   Llamas.get().success(function(data){
   
@@ -36,28 +36,199 @@ demoControllers.controller('LlamaListController', ['$scope', '$http', 'CommonDat
 demoControllers.controller('UserListController', ['$scope', '$http', 'CommonData','User', '$window' , function($scope, $http, CommonData, User, $window) {
     $scope.conditions = ""
      User.get($scope.conditions).success(function(data){
-      CommonData.setUsers(data.data)
-     $scope.users = CommonData.getUsers();
-  });
+        CommonData.setUsers(data.data)
+       $scope.users = CommonData.getUsers();
+    });
 
-     $scope.delete = User.delete($scope.conditions).success(function(data){
-         CommonData.setUsers(data.data)
-         $scope.users = CommonData.getUsers();
-     }));
+    $scope.delete = function(user_id){
+      console.log("delete is called" + user_id)
 
-     $scope.users = CommonData.getUsers();
-  });
+         User.delete(user_id).success(function(data){
+            console.log("returned message" + data.message)
+                 User.get($scope.conditions).success(function(data){
+                 CommonData.setUsers(data.data)
+                $scope.users = CommonData.getUsers();
+            }); 
+         });
 
-
-
+    };
+         
 
 }]);
 
-demoControllers.controller('TaskListController', ['$scope', '$http', 'Llamas', '$window' , function($scope, $http,  Llamas, $window) {
+demoControllers.controller('addUserController', ['$scope', '$http', 'CommonData','User', '$window' , function($scope, $http, CommonData, User, $window) {
+    
+     console.log("addUser is called")
+    $scope.addUser = function(){
+      console.log("addUser is called")
+         if($scope.name == undefined || $scope.email == undefined)
+            return;
+         var data = {
+          name : $scope.name,
+          email : $scope.email
+         }
+         User.post(data).success(function(data){
+            console.log("returned message" + data.message)
+            $scope.returnedMsg = data.message;
+        
+         }).error(function(data, status, headers, config) {
+            $scope.returnedMsg = data.message;
+       });
 
-  Llamas.get().success(function(data){
-    $scope.llamas = data;
-  });
+    };
+    
+    $scope.returnedMsg ="";
+         
+
+}]);
+
+demoControllers.controller('UserDetailsController', ['$scope', '$http','$routeParams', 'CommonData', 'User','Task', '$window' , function($scope, $http, $routeParams, CommonData, User, Task, $window) {
+    
+     console.log("UserDetailsController is called")
+        $scope.taskNames = [];
+        $scope.taskData = [];
+     User.getById($routeParams.id).success(function(data){
+            console.log("returned message" + data.message)
+                 
+                $scope.user = data.data;
+                $scope.tasks = data.data.pendingTasks
+             
+
+                var idx;
+                for(idx in $scope.tasks){
+                  console.log($scope.tasks[idx])
+                  $scope.getTaskByid($scope.tasks[idx])
+                }
+              
+         
+         }).error(function(data, status, headers, config) {
+            console.log("returned message" + data.message)
+            $scope.returnedMsg = data.message;
+       });
+
+      $scope.getTaskByid = function(id){
+          console.log("getTaskByid is called id is " + id)
+
+          Task.getById(id).success(function(data){
+             console.log("task name" + data.data.name)
+             $scope.taskData.push(data.data)
+             $scope.taskNames.push(data.data.name)
+          }).error(function(data, status, headers, config) {
+            $scope.returnedMsg = data.message;
+         });
+
+        }
+
+      $scope.completeTask = function(name){
+        console.log("complete task " ) 
+        var idx = $scope.taskNames.indexOf(name)
+        console.log("remove " + idx + name) 
+        $scope.tasks.splice(idx, 1);
+        $scope.taskNames.splice(idx, 1);
+        $scope.user.pendingTasks = $scope.tasks;
+
+        User.put($routeParams.id, $scope.user).success(function(data){
+          $scope.returnedMsg = data.message;
+        }).error(function(data, status, headers, config){
+           $scope.returnedMsg = data.message;
+        });
+        var tmpTask = $scope.taskData[idx] 
+        $scope.taskData.splice(idx, 1);
+        tmpTask.completed = true;
+        Task.put(tmpTask._id, tmpTask).success(function(data){
+          $scope.returnedMsg = data.message;
+        }).error(function(data, status, headers, config){
+           $scope.returnedMsg = data.message;
+        });
+
+
+
+      }
+
+      $scope.showCompletedTask = function(){
+        
+        var conditions = {assignedUserName:$scope.user.name, "completed": true}
+        var json = angular.toJson(conditions)
+        console.log("?where="+json)
+        Task.get("?where="+json).success(function(data){
+          $scope.completedTasks = data.data
+          $scope.returnedMsg = data.message;
+        }).error(function(data, status, headers, config){
+           $scope.returnedMsg = data.message;
+        }); 
+
+      }
+
+
+    
+         
+
+}]);
+
+demoControllers.controller('TaskListController', ['$scope', '$http', 'Task', 'CommonData','$window' , function($scope, $http,  Task, CommonData,$window) {
+
+    $scope.conditions = 'pending'
+    $scope.sort = 'name'
+    $scope.order = '1'
+
+    var select = {"name" : 1, "_id" : 1, "assignedUserName" : 1 }
+
+    $scope.delete = function(user_id){
+      console.log("delete is called" + user_id)
+
+         Task.delete(user_id).success(function(data){
+            console.log("returned message" + data.message)
+            var key = String($scope.sort)
+            var value = parseInt($scope.order)
+            var cond2 = {key : value}//{String($scope.sort) : String($scope.order)}
+           Task.get("?sort="+"{"+key+":"+value+"}"+"&select="+angular.toJson(select)).success(function(data){
+              console.log(data.message)
+              CommonData.setLists(data.data)
+             $scope.tasks = CommonData.getLists();
+          });
+       
+         });
+
+    };
+
+    $scope.$watchGroup(['conditions', 'sort', 'order'], function(newVals, oldVals){
+        console.log("newVal "+ newVals +" oldVal " +oldVals)
+        if($scope.conditions == 'all'){
+          var key = $scope.sort
+          var value = parseInt($scope.order)
+
+          var cond = {key : value}
+
+          Task.get("?sort="+"{"+key+":"+value+"}"+"&"+"select="+angular.toJson(select)).success(function(data){
+              console.log(data.message)
+              CommonData.setLists(data.data)
+             $scope.tasks = CommonData.getLists();
+          });
+
+        }else if($scope.conditions == 'completed'){
+           var cond1 = {"completed": true};
+           var key = $scope.sort
+           var value = parseInt($scope.order)
+       
+
+           Task.get("?where="+angular.toJson(cond1)+"&"+"sort="+"{"+key+":"+value+"}"+"&select="+angular.toJson(select)).success(function(data){
+              console.log(data.message)
+              CommonData.setLists(data.data)
+             $scope.tasks = CommonData.getLists();
+          });
+        }else{
+            var cond = {"completed": false}
+            var key = String($scope.sort)
+            var value = parseInt($scope.order)
+            var cond2 = {key : value}//{String($scope.sort) : String($scope.order)}
+     Task.get("?where="+angular.toJson(cond)+"&"+"sort="+"{"+key+":"+value+"}"+"&select="+angular.toJson(select)).success(function(data){
+        console.log(data.message)
+        CommonData.setLists(data.data)
+       $scope.tasks = CommonData.getLists();
+    });
+
+        }
+    }, true)
 
 
 }]);

@@ -1,12 +1,38 @@
-<div class="list" ng-controller='SecondController'>    
-  Second Controller
-  <form>
+<div class="list" ng-controller='UserDetailsController'>    
 
-    <div class="text-center">
-      <button ng-click="getData()" class="button tiny info">Get Data</button>
-    </div>
+	<div class ="row">	
+		<div class = "small-4 columns">
+			<h5> Username: {{user.name}}</h5>
+			<h5>Email: {{user.email}}</h5>
+		</div>
 
-    {{data}}
+		<h5>Pending Tasks</h5>
+		<div class = "small-8 columns" ng-repeat = "task in taskNames">
+			
+			<div class = "row">
+				<div class = "small-8 columns">
+					<h5>{{task}}</h5>
+				</div>
 
-  </form>
+				<div class = "small-4 columns">
+					<button ng-click = "completeTask(task)" type="submit">Complete</button>
+				</div>
+
+			</div>
+		</div>
+
+	</div> 
+
+	<div class = "row">
+			<button ng-click = "showCompletedTask()" type="submit">Show Completed task</button>
+			<ul ng-repeat = 'completedTask in completedTasks'>
+				<li>
+					<h5>Task name: {{completedTask.name}}</h5>
+				</li>
+
+			</ul>
+
+	</div>
+				
+
 </div>

@@ -1,12 +1,46 @@
-<div class="list" ng-controller='SecondController'>    
-  Second Controller
-  <form>
+<div class="list" ng-controller='TaskListController'>    
+<div class="row">
+          <div class="small-12 columns">
+            <a href="#adduser" class="button">Add task</a>
+          </div>
+      </div>
 
-    <div class="text-center">
-      <button ng-click="getData()" class="button tiny info">Get Data</button>
+      <div class="row">
+	      <label>Display options</label>
+		      <input type="radio" ng-model = 'conditions' value="all" ><label >All</label>
+		      <input type="radio" ng-model = 'conditions' value="completed" ><label >Completed</label>
+		      <input type="radio" ng-model = 'conditions' value="pending" ><label >Pending</label>
     </div>
 
-    {{data}}
+    <div class="row">
+	      <label>Acending/Decending</label>
+		      <input type="radio" ng-model = 'order' value="1" ><label >Acending</label>
+		      <input type="radio" ng-model = 'order' value="-1" ><label >Decending</label>
+    </div>
 
-  </form>
+    <div class="row">
+	    <label>Sorted By
+	        <select ng-model = "sort">
+		          <option value="name">name</option>
+		          <option value="assignedUserName">username</option>
+		          <option value="dateCreated">dateCreated</option>
+		          <option value="deadline">deadline</option>
+	        </select>
+      </label>
+    </div>
+
+	<div ng-repeat = "task in tasks">
+	  <div class="row text-center" >
+          <div class="small-4 columns">
+            <h4><a href="#tasklist/{{task._id}}">{{task.name}}</a></h4>
+          </div>
+          <div class="small-4 columns">
+            <h4>{{task.assignedUserName}}</h4>
+          </div>
+          <div class="small-4 columns">
+                 <button ng-click="delete(task._id)" class="button alert">Delete</button>
+          </div>
+
+      </div>
+  </div>
 </div>

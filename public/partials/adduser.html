@@ -1,12 +1,20 @@
-<div class="list" ng-controller='SecondController'>    
-  Second Controller
-  <form>
+<div class="list" ng-controller='addUserController'>    
+  <form data-abide>
+  <div class="name-field">
+    <label>Your name <small>required</small>
+      <input ng-model="name" type="text" required pattern="[a-zA-Z]+">
+    </label>
+    <small class="error">Name is required and must be a string.</small>
+  </div>
+  <div class="email-field">
+    <label>Email <small>required</small>
+      <input ng-model="email" type="email" required>
+    </label>
+    <small class="error">An email address is required.</small>
+  </div>
+  <button ng-click = "addUser()" type="submit">Submit</button>
 
-    <div class="text-center">
-      <button ng-click="getData()" class="button tiny info">Get Data</button>
-    </div>
+</form>
 
-    {{data}}
-
-  </form>
+  <div>	{{returnedMsg}} </div>
 </div>

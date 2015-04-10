@@ -1,12 +1,41 @@
-<div class="list" ng-controller='SecondController'>    
-  Second Controller
-  <form>
+<div class="list" ng-controller='addTaskController'>    
+  <form data-abide>
+  <div class="name-field">
+    <label>Your name <small>required</small>
+      <input ng-model="name" type="text" required pattern="[a-zA-Z]+">
+    </label>
+    <small class="error">Name is required and must be a string.</small>
+  </div>
+  <div class = "row">
+  	<div class = "large-12 columns">
+  		<label for="description">Description</label>
+  		<textarea ng-model = "description"></textarea>
+  	</div>
+  </div>
+  <div class = "row">
+  	<div class = "small-12 columns">
+  	<datepicker>
+        <input ng-model="date" type="text">
+      </datepicker>
+  	</div>
+  </div>
 
-    <div class="text-center">
-      <button ng-click="getData()" class="button tiny info">Get Data</button>
+   <div class="row">
+	    <label>Choose User
+	        <select >
+		          <option value="name">name</option>
+		          <option value="assignedUserName">username</option>
+		          <option value="dateCreated">dateCreated</option>
+		          <option value="deadline">deadline</option>
+	        </select>
+      </label>
     </div>
+  <div>
 
-    {{data}}
+  </div>
+  <button ng-click = "addTask()" type="submit">Submit</button>
 
-  </form>
+</form>
+
+  <div>	{{returnedMsg}} </div>
 </div>

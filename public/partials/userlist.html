@@ -1,15 +1,20 @@
-<div class="list" ng-controller='FirstController'>		
+<div class="list" ng-controller='UserListController'>	
+<div class="row">
+          <div class="small-12 columns">
+            <a href="#adduser" class="button">Add User</a
+          </div>
+      </div>	
 	<div ng-repeat = "user in users">
 	  <div class="row text-center" >
           <div class="small-4 columns">
-            <h4>{{user.name}}</h4>
+            <h4><a href="#userlist/{{user._id}}">{{user.name}}</a></h4>
           </div>
           <div class="small-4 columns">
             <h4>{{user._id}}</h4>
           </div>
 
           <div class="small-4 columns">
-             <button ng-click="delete({{user._id}})" class="button alert">Delete</button>
+             <button ng-click="delete(user._id)" class="button alert">Delete</button>
           </div>
       </div>
   </div>
