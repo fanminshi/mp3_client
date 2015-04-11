@@ -1,34 +1,39 @@
 <div class="list" ng-controller='addTaskController'>    
   <form data-abide>
-  <div class="name-field">
-    <label>Your name <small>required</small>
-      <input ng-model="name" type="text" required pattern="[a-zA-Z]+">
-    </label>
-    <small class="error">Name is required and must be a string.</small>
-  </div>
+  	<div class ="row">
+  		<div class = "large-12 columns">
+  			  <div class="name-field">
+				    <label>Task name <small>required</small>
+				      <input ng-model="name" type="text" required >
+				    </label>
+				    <small class="error">Name is required and must be a string.</small>
+			  </div>
+  		</div>
+  	</div>
+
   <div class = "row">
   	<div class = "large-12 columns">
-  		<label for="description">Description</label>
-  		<textarea ng-model = "description"></textarea>
+  		<label for="description">Description <small>required</small> </label>
+  		<textarea ng-model = "description" required></textarea>
+  		<small class="error">description is required </small>
   	</div>
   </div>
   <div class = "row">
   	<div class = "small-12 columns">
-  	<datepicker>
-        <input ng-model="date" type="text">
-      </datepicker>
+  		<label for="deadline">Deadline <small>required</small> </label>
+	        <input ng-model="date" required type="date">
+	    <small class="error">date is required </small>
   	</div>
   </div>
-
    <div class="row">
-	    <label>Choose User
-	        <select >
-		          <option value="name">name</option>
-		          <option value="assignedUserName">username</option>
-		          <option value="dateCreated">dateCreated</option>
-		          <option value="deadline">deadline</option>
-	        </select>
-      </label>
+   		<div class = "small-12 columns">
+		    <label>Choose User
+		        <select ng-model = "user" >
+			          <option ng-repeat ='user in users' value='{{user.name}}'  >{{user.name}} </option>
+		        </select>
+	      </label>
+	      <small class="error">Choosing a user is required </small>
+	  </div>
     </div>
   <div>
 

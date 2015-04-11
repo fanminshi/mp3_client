@@ -1,12 +1,21 @@
-<div class="list" ng-controller='SecondController'>    
-  Second Controller
-  <form>
+<div class="list" ng-controller='TaskDetailsController'>  
+	<div class = "row">
+		<div small-12 columns>
+				<a class="button" href="#edittask/{{task._id}}" type="submit">Edit</a>
+		</div>
 
-    <div class="text-center">
-      <button ng-click="getData()" class="button tiny info">Get Data</button>
-    </div>
+	</div>  
 
-    {{data}}
+	<div class ="row">	
 
-  </form>
+		<div class = "small-6 columns">
+			<h5> Task: {{task.name}}</h5>
+			<h5> Assigned To : {{task.assignedUserName}}</h5>
+		</div>
+		<div class = "small-6 columns" >
+			<h5>Deadline: {{task.deadline}}</h5>
+			<h5>Completion Status: {{task.completed}}</h5>
+		</div>
+
+	</div> 
 </div>

@@ -82,6 +82,108 @@ demoControllers.controller('addUserController', ['$scope', '$http', 'CommonData'
 
 }]);
 
+demoControllers.controller('addTaskController', ['$scope', '$http', 'CommonData','User', 'Task', '$window' , function($scope, $http, CommonData, User, Task, $window) {
+    
+     console.log("addTask is called")
+     $scope.user = ""
+     $scope.users = []
+     var cond = {"name":1, "_id":0}
+     User.get("?select="+angular.toJson(cond)).success(function(data){
+            console.log("returned message" + data.message)
+            
+            $scope.users = data.data;
+        
+         }).error(function(data, status, headers, config) {
+            $scope.returnedMsg = data.message;
+       });
+
+     $scope.addTask = function(){
+     
+         if($scope.name == undefined || $scope.description == undefined || $scope.date == undefined )
+            return;
+         var data = {
+          "deadline" : $scope.date,
+          "name" : $scope.name,
+          "assignedUserName" : $scope.user,
+          "description" : $scope.description
+         }
+
+         Task.post(data).success(function(data){
+            console.log("returned message" + data.message)
+            $scope.returnedMsg = data.message;
+        
+         }).error(function(data, status, headers, config) {
+            $scope.returnedMsg = data.message;
+       });
+
+    };
+    
+    $scope.returnedMsg ="";
+         
+
+}]);
+
+demoControllers.controller('editTaskController', ['$scope', '$http','$routeParams', 'CommonData','User', 'Task', '$window' , function($scope, $http, $routeParams, CommonData, User, Task, $window) {
+    
+        console.log("editDetailsController is called")
+
+
+         $scope.users = []
+         var cond = {"name":1, "_id":0}
+
+         User.get("?select="+angular.toJson(cond)).success(function(data){
+            console.log("returned message" + data.message)
+            
+            $scope.users = data.data;
+        
+         }).error(function(data, status, headers, config) {
+            $scope.returnedMsg = data.message;
+       });
+
+        Task.getById($routeParams.id).success(function(data){
+            console.log("returned message" + data.message)
+                 
+                $scope.task = data.data;
+                $scope.name = data.data.name;
+                $scope.date = data.data.deadline;
+                $scope.description = data.data.description
+                $scope.user = data.data.assignedUserName
+                $scope.completed = data.data.completed
+                console.log($scope.user)
+              
+         
+         }).error(function(data, status, headers, config) {
+            console.log("returned message" + data.message)
+            $scope.returnedMsg = data.message;
+       });
+
+     $scope.editTask = function(){
+     
+         if($scope.name == undefined || $scope.description == undefined || $scope.date == undefined )
+            return;
+         var data = {
+          "deadline" : $scope.date,
+          "name" : $scope.name,
+          "assignedUserName" : $scope.user,
+          "description" : $scope.description,
+          "completed" : $scope.completed
+         }
+
+         Task.put( $routeParams.id, data).success(function(data){
+            console.log("returned message" + data.message)
+            $scope.returnedMsg = data.message;
+        
+         }).error(function(data, status, headers, config) {
+            $scope.returnedMsg = data.message;
+       });
+
+    };
+    
+    $scope.returnedMsg ="";
+         
+
+}]);
+
 demoControllers.controller('UserDetailsController', ['$scope', '$http','$routeParams', 'CommonData', 'User','Task', '$window' , function($scope, $http, $routeParams, CommonData, User, Task, $window) {
     
      console.log("UserDetailsController is called")
@@ -162,6 +264,24 @@ demoControllers.controller('UserDetailsController', ['$scope', '$http','$routePa
 
     
          
+
+}]);
+
+demoControllers.controller('TaskDetailsController', ['$scope', '$http','$routeParams', 'CommonData', 'User','Task', '$window' , function($scope, $http, $routeParams, CommonData, User, Task, $window) {
+    
+     console.log("TaskDetailsController is called")
+        Task.getById($routeParams.id).success(function(data){
+            console.log("returned message" + data.message)
+                 
+                $scope.task = data.data;
+              
+         
+         }).error(function(data, status, headers, config) {
+            console.log("returned message" + data.message)
+            $scope.returnedMsg = data.message;
+       });
+
+
 
 }]);
 
