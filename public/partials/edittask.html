@@ -1,0 +1,59 @@
+<div class="list" ng-controller='editTaskController'> 
+  
+  <form data-abide>
+  	<div class ="row">
+  		<div class = "large-12 columns">
+  			  <div class="name-field">
+				    <label>Task name <small>required</small>
+				      <input ng-model="name" type="text" required >
+				    </label>
+				    <small class="error">Name is required and must be a string.</small>
+			  </div>
+  		</div>
+  	</div>
+
+  <div class = "row">
+  	<div class = "large-12 columns">
+  		<label for="description">Description <small>required</small> </label>
+  		<textarea ng-model = "description" required></textarea>
+  		<small class="error">description is required </small>
+  	</div>
+  </div>
+  <div class = "row">
+  	<div class = "small-12 columns">
+  		<label for="deadline">Deadline <small>required</small> </label>
+
+	        <input ng-model="date" required type="datetime">
+	    <small class="error">date is required </small>
+  	</div>
+  </div>
+   <div class="row">
+   		<div class = "small-12 columns">
+		    <label>Choose User 
+          Default is : {{user}}
+		        <select ng-model = 'user' >
+			          <option ng-repeat ='user in users' value= {{user.name}}  >{{user.name}} </option>
+		        </select>
+	      </label>
+	      <small class="error">Choosing a user is required </small>
+	  </div>
+    </div>
+  <div>
+
+  </div>
+
+
+    <div class="row">
+       <div class = "small-12 columns">
+          <label>Completed default {{completed}}</label>
+          <input type="radio" ng-model = 'completed' value='true' ><label >yes</label>
+          <input type="radio" ng-model = 'completed' value='false' ><label >no</label>
+       </div>
+        
+    </div>
+  <button ng-click = "editTask()" type="submit">Submit</button>
+
+</form>
+
+  <div>	{{returnedMsg}} </div>
+</div>
